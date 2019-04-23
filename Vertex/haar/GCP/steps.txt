@@ -1,0 +1,23 @@
+#!/bin/bash
+
+$ touch haar.sh
+$ nano haar.sh
+
+# haar.sh
+## 30 30
+#!/bin/bash
+cd dataset
+opencv_traincascade -data ./haar3030 -vec 3030.vec -bg bad.dat -numStages 25 -minhitrate 0.999 -maxFalseAlarmRate 0.5 -numPos 819 -numNeg 1468 -w 30 -h 30 -mode ALL -precalcValBufSize 25500 -precalcIdxBufSize 25500
+
+## 40 40
+#!/bin/bash
+cd dataset
+opencv_traincascade -data ./haar4040 -vec 4040.vec -bg bad.dat -numStages 25 -minhitrate 0.999 -maxFalseAlarmRate 0.5 -numPos 819 -numNeg 1468 -w 40 -h 40 -mode ALL -precalcValBufSize 25000 -precalcIdxBufSize 25000
+
+$ touch haar.txt
+$ mkdir output
+# Запуск демона
+$ chmod +x haar.sh
+$ nohup ./haar.sh >$HOME/haar.txt 2>&1 < /dev/null &
+# ckeck state
+$ jobs
