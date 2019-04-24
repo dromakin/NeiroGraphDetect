@@ -48,4 +48,4 @@ $ python markup.py PRED_POS YOUR_NAME_FOLDER
 ```
 
 # Back to Menu
-- [BACK to Menu](https://github.com/iu8-nn-2018/NeiroGraph/tree/Steps-of-project-and-description)
+- [BACK to Menu](https://github.com/Dmitriy1594/NeiroGraphDetect/tree/Steps-of-project)
