@@ -2,7 +2,7 @@
 ## Оцифровка графов
 Создатель: Ромакин Д.В.
 
-Привет всем читателям Habrahabr, в этой статье я хочу поделиться с Вами своим первым проектом, связанным с нейронными сетями. Особенность темы - ее еще никто не рассматривал, а она затрагивает множество различных областей.
+Привет всем читателям Habrahabr, в этой статье я хочу поделиться с Вами своим первым проектом, связанным с нейронными сетями. Особенность темы - ее еще никто не рассматривал, а она затрагивает множество различных областей. Сразу скажу: статья достаточно длинная, но интересная.
 
 **В проекте затрагиваются темы:**
 - Обработка изображения с помощью библиотеки OpenCV
@@ -145,9 +145,9 @@ def preprocessing(image, type=None, save=False):
 ### **Почему каскады Хаара?**
 
 Для поиска окружностей рассматривалаись 3 алгоритма:
-1.  Simple Blob Detector (2 варианта)
-2.  MSER Blob Detector (2 варианта)
-3.  Hough Circles
+1.  Simple Blob Detector ([example](https://www.learnopencv.com/blob-detection-using-opencv-python-c/), [documentation](https://docs.opencv.org/3.4.3/d0/d7a/classcv_1_1SimpleBlobDetector.html))
+2.  MSER Blob Detector ([example](http://qaru.site/questions/2443082/merge-mser-detected-objetcs-opencv-python), [documentation](https://docs.opencv.org/2.4/modules/features2d/doc/feature_detection_and_description.html?highlight=mser))
+3.  Hough Circles ([example](https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/), [documentation](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghcircles/py_houghcircles.html))
 
 Первые 2 не подошли из-за маленького числа распознанных вершин при тестировании,
 а последний алгоритм (3) может конкурировать с каскадами,
@@ -204,7 +204,12 @@ def preprocessing(image, type=None, save=False):
 
 ### **Обучение признаков Хаара**
 
-#### **Визуализация обучения каскадов Хаара**
+#### **Визуализация обучения каскада Хаара**
+Фичи, которые выделяет каскад при обучении можно увидеть, используя следующий скрипт: (подробнее: [тут](https://docs.opencv.org/3.3.0/dc/d88/tutorial_traincascade.html))
+```
+opencv_visualisation --image=/data/object.png --model=/data/model.xml --data=/data/result/
+```
+**Пример детекции лица:**
 
 [![64](http://img.youtube.com/vi/hPCTwxF0qf4/0.jpg)](http://www.youtube.com/watch?v=hPCTwxF0qf4 "Визуализация обучения каскадов Хаара")
 
@@ -229,7 +234,7 @@ def preprocessing(image, type=None, save=False):
 $ nohup ./haar1515.sh \>\$HOME/haar1515.txt 2\>&1 \< /dev/null &
 ```
 
-Для отслеживания аппаратных ресурсов и прогресса применялась утилита
+Для отслеживания аппаратных ресурсов и прогресса применялась старая добрая утилита
 **htop**:
 
 ![](./foto/20.png)
@@ -238,12 +243,10 @@ C помощью **htop** можно отследить потребляемую
 также нагрузку на процессор, благодаря чему было выявлено, что программа для обучения из библиотеки OpenCV не выделяет память в указанном размере в скрипте **haar1515.sh**.
 
 Конечный результат вывода в файл **haar1515.txt** (последняя стадия обучения)
+
 ![](./foto/21.png)
 
-Каскады Хаара обучаются довольно долго, в данном случае 23 стадия
-обучалась 31 день. Это не предел, поэтому каскады Хаара обучались не
-более, чем на 25 эпохах, используя 8 ядер и не менее 40 Гб оперативной
-памяти.
+Каскады Хаара обучаются довольно долго из-за того, что обучаются на процессоре, а не на GPU (пробовал подключать GPU - бузуспешно), в данном случае 23 стадия обучалась 31 день. Это не предел, поэтому каскады Хаара обучались не более, чем на 25 эпохах, используя 8 ядер и не менее 40 Гб оперативной памяти.
 
 ### **Выбор обученной модели Хаара**
 #### **Скрипт для тестирования каскада Хаара**
@@ -412,6 +415,12 @@ sns.countplot(data['vertex_sort.model'])
 
 Все подобные случаи пересечения учитываются при выполнения работы.
 
+**Результат работы каскада Хаара**
+-------------------------------------
+Каскад Хаара | Фильтр СНС | Результат
+--- | --- | ---
+![](./foto/haar_1.jpg)  | ![](./foto/haar_cnn_1.jpg)   |  ![](./foto/vertex_predict_1.jpg)
+![](./foto/haar_2.jpg)  | ![](./foto/haar_cnn_2.jpg)   |  ![](./foto/vertex_predict_2.jpg)
 
 **Поиск начал линий**
 =====================
@@ -526,7 +535,6 @@ sns.countplot(data['vertex_sort.model'])
 #### Результат:
 ![](./foto/50.png)
 
-
 Движение Tracker
 ----------------
 
@@ -588,12 +596,16 @@ sns.countplot(data['vertex_sort.model'])
 #### **Пример проблемы:**
 ![](./foto/57.png)
 
-Вывод
+Примеры
 ==========
-Минусы на текущей стадии:
-1. Невозможность обработки пересечений линий
-2. Отсутствие GUI интерфейса для удобного использования
-3. Наличие параметра -green и -white в скрипте для запуска предобрабротки изображения (1 этап алгоритма)
+
+Original image | Preprocessing | Vertex Search | Find Start | Tracker | Result
+--- | --- | --- | --- | --- | ---
+![](./foto/ex1_0.jpg) | ![](./foto/ex1_1.gif) | ![](./foto/ex1_2.gif) | ![](./foto/ex1_3.gif) | ![](./foto/ex1_4.gif) | ![](./foto/ex1_5.jpg)
+![](./foto/ex2_0.jpg) | ![](./foto/ex2_1.gif) | ![](./foto/ex2_2.gif) | ![](./foto/ex2_3.gif) | ![](./foto/ex2_4.gif) | ![](./foto/ex2_5.jpg)
+![](./foto/ex3_0.jpg) | ![](./foto/ex3_1.gif) | ![](./foto/ex3_2.gif) | ![](./foto/ex3_3.gif) | ![](./foto/ex3_4.gif) | ![](./foto/ex3_5.jpg)
+![](./foto/ex4_0.jpg) | ![](./foto/ex4_1.gif) | ![](./foto/ex4_2.gif) | ![](./foto/ex4_3.gif) | ![](./foto/ex4_4.gif) | ![](./foto/ex4_5.jpg)
+![](./foto/ex5_0.jpg) | ![](./foto/ex5_1.gif) | ![](./foto/ex5_2.gif) | ![](./foto/ex5_3.gif) | ![](./foto/ex5_4.gif) | ![](./foto/ex5_5.jpg)
 
 Литература
 ==========
