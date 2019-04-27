@@ -605,7 +605,7 @@ Original image | Preprocessing | Vertex Search | Find Start | Tracker | Result
 ![](./foto/ex2_0.jpg) | ![](./foto/ex2_1.gif) | ![](./foto/ex2_2.gif) | ![](./foto/ex2_3.gif) | ![](./foto/ex2_4.gif) | ![](./foto/ex2_5.jpg)
 ![](./foto/ex3_0.jpg) | ![](./foto/ex3_1.gif) | ![](./foto/ex3_2.gif) | ![](./foto/ex3_3.gif) | ![](./foto/ex3_4.gif) | ![](./foto/ex3_5.jpg)
 ![](./foto/ex4_0.jpg) | ![](./foto/ex4_1.gif) | ![](./foto/ex4_2.gif) | ![](./foto/ex4_3.gif) | ![](./foto/ex4_4.gif) | ![](./foto/ex4_5.jpg)
-![](./foto/ex5_0.jpg) | ![](./foto/ex5_1.gif) | ![](./foto/ex5_2.gif) | ![](./foto/ex5_3.gif) | ![](./foto/ex5_4.gif) | ![](./foto/ex5_5.jpg)
+![](./foto/ex5_0.JPG) | ![](./foto/ex5_1.gif) | ![](./foto/ex5_2.gif) | ![](./foto/ex5_3.gif) | ![](./foto/ex5_4.gif) | ![](./foto/ex5_5.jpg)
 
 Литература
 ==========
