@@ -608,7 +608,7 @@ Original image | Preprocessing | Vertex Search | Find Start | Tracker | Result
 
 Original image | Preprocessing | Vertex Search with action | Find Start | Tracker | Result
 --- | --- | --- | --- | --- | ---
-![](./photo/ex5_0.JPG) | ![](./photo/ex5_1.gif) | ![](./photo/ex5_2.gif) | ![](./photo/ex5_3.gif) | ![](./photo/ex5_4.gif) | ![](./photo/ex5_5.jpg)
+![](./photo/ex5_0.jpg) | ![](./photo/ex5_1.gif) | ![](./photo/ex5_2.gif) | ![](./photo/ex5_3.gif) | ![](./photo/ex5_4.gif) | ![](./photo/ex5_5.jpg)
 
 Литература
 ==========
