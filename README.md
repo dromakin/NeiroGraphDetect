@@ -667,7 +667,6 @@ plt.show()
 
 ####  Пример проблемы:
 Original image -> Preprocessing  |  Vertex Search with action  |  Find Start  |  Tracker  |  Result
-
 ---  |  ---  |  ---  |  ---  |  ---
 ![](./photo/ex2_1.gif)  |   ![](./photo/ex2_2.gif)  |  ![](./photo/ex2_3.gif)  |  ![](./photo/ex2_4.gif)  |  ![](./photo/ex2_5.jpg)
 
