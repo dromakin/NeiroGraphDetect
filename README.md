@@ -667,6 +667,7 @@ plt.show()
 
 ####  Пример проблемы:
 Original image -> Preprocessing  |  Vertex Search with action  |  Find Start  |  Tracker  |  Result
+
 ---  |  ---  |  ---  |  ---  |  ---  |  ---
 ![](./photo/ex2_1.gif)  |   ![](./photo/ex2_2.gif)  |  ![](./photo/ex2_3.gif)  |  ![](./photo/ex2_4.gif)  |  ![](./photo/ex2_5.jpg)
 
@@ -675,6 +676,7 @@ Original image -> Preprocessing  |  Vertex Search with action  |  Find Start  | 
 
 ### Другие примеры
 Original image -> Preprocessing  |  Vertex Search with action  |  Find Start  |  Tracker  |  Result
+
 ---  |  ---  |  ---  |  ---  |  ---  |  ---
 ![](./photo/ex1_1.gif) | ![](./photo/ex1_2.gif) | ![](./photo/ex1_3.gif) | ![](./photo/ex1_4.gif) | ![](./photo/ex1_5.jpg)
 ![](./photo/ex3_1.gif) | ![](./photo/ex3_2.gif) | ![](./photo/ex3_3.gif) | ![](./photo/ex3_4.gif) | ![](./photo/ex3_5.jpg)
@@ -682,6 +684,7 @@ Original image -> Preprocessing  |  Vertex Search with action  |  Find Start  | 
 
 ###  Пример, где активируется дополнительный фильтр пересечений:
 Original image -> Preprocessing | Vertex Search with action | Find Start | Tracker | Result
+
 --- | --- | --- | --- | --- | ---
 ![](./photo/ex5_1.gif) | ![](./photo/ex5_2.gif) | ![](./photo/ex5_3.gif) | ![](./photo/ex5_4.gif) | ![](./photo/ex5_5.jpg)
 
