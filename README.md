@@ -2,7 +2,7 @@
 ## Оцифровка графов
 Создатель: Ромакин Д.В.
 
-Привет всем читателям Habrahabr, в этой статье я хочу поделиться с Вами своим первым проектом, связанным с нейронными сетями. Данная тема "на пальцах" освещается весьма плохо. Сразу скажу: статья достаточно длинная, но интересная.
+Привет всем читателям Habrahabr, в этой статье я хочу поделиться с Вами своим первым проектом, который посвящен оцифровке неориентированных графов. Данная тема "на пальцах" освещается весьма плохо. Сразу скажу: статья достаточно длинная, но интересная.
 
 **В проекте затрагиваются темы:**
 - Обработка изображения с помощью библиотеки OpenCV
@@ -10,11 +10,9 @@
 - Каскады Хаара
 - Сравнение различных алгоритмов распознавания из библиотеки OpenCV
 
+Данная работа посвящалась оцифровке неориентированных графов.
 
-### Начну сразу с результатов
-Данная работа посвящалась оцифровке графов, если граф без пересечений и без весов, то задача выполнена, иначе – есть над чем работать.
-
-### Результаты на текущей стадии
+### Результаты работы
 На вход подается изображение с графом, нарисованным
 - на доске (слева), результат - справа
 
@@ -84,7 +82,9 @@
 **Подготовка данных**
 =================
 
-После анализа входных изображений пришлось использовать фильтр Гаусса и перевод в один канал.
+Подготовка данных - это маленький, но значимый шаг в алгоритме работы системы.
+
+### Как работает
 
 Изображение подается на вход с префиксом green/white:
 
@@ -98,7 +98,7 @@
 
 3.  White - изображение с листка бумаги. Этапы: переводим в 1 канал.
 
-Скрипт Python:
+### Скрипт Python:
 ```python
 def preprocessing(image, type=None, save=False):
     img = image.copy()
@@ -128,7 +128,7 @@ def preprocessing(image, type=None, save=False):
 **Поиск вершин графа**
 ======================
 
-Обработанное изображение подается на алгоритм, который состоит из
+Подготовленное изображение подается на алгоритм, который состоит из
 несколько шагов:
 
 1.  [Каскады Хаара](https://habr.com/ru/company/recognitor/blog/228195/)
@@ -149,12 +149,11 @@ def preprocessing(image, type=None, save=False):
 2.  MSER Blob Detector ([example](http://qaru.site/questions/2443082/merge-mser-detected-objetcs-opencv-python), [documentation](https://docs.opencv.org/2.4/modules/features2d/doc/feature_detection_and_description.html?highlight=mser))
 3.  Hough Circles ([example](https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/), [documentation](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghcircles/py_houghcircles.html))
 
-Первые 2 не подошли из-за маленького числа распознанных вершин при тестировании,
-а последний алгоритм (3) может конкурировать с каскадами,
-но ему требуется правильные коэффициенты для каждого изображения.
+Первые 2 не подошли из-за маленького числа распознанных вершин при тестировании, а последний алгоритм может конкурировать с каскадами,
+но ему требуется уникальные коэффициенты, которые подходят для данного изображения.
 
 #### Основа каскада Хаара
-В основе каскадов Хаара из библеиотеки OpenCV лежит метод Виолы-Джонса (Viola-Jones)
+В основе каскадов Хаара из библиотеки OpenCV лежит метод Виолы-Джонса (Viola-Jones)
 (чаще всего его используют для распознавания лиц),
 который основывается на следующих принципах:
 1. используются изображения в [интегральном представлении](https://en.wikipedia.org/wiki/Summed-area_table), что позволяет вычислять быстро необходимые объекты;
@@ -175,7 +174,7 @@ def preprocessing(image, type=None, save=False):
 
 ### **Подготовка данных**
 
-**Все разработанные программы применялись для создания датасета, в последствии - для обучения каскадов Хаара.**
+**Все разработанные программы применялись для создания датасета для обучения каскадов Хаара.**
 
 #### **Программа для создания набора данных для обучения**
 
@@ -191,16 +190,13 @@ def preprocessing(image, type=None, save=False):
 
 ![](./photo/16.png)
 
-Также с помощью программы можно сформировать индексный файл с расширением .dat для дальнейшего обучения каскадов Хаара.
+Также с помощью программы можно сформировать индексный файл с расширением .dat для дальнейшего обучения каскадов Хаара (фотография выше).
 
 #### **Программа для генерации дополнительного набора данных для обучения**
 
 ![](./photo/17.jpg)
 
-При малом количестве изображений можно
-сгенерировать дополнительные наборы данных путем поворота их на
-определенный угол, который задается перед запуском, или на произвольный
-угол (от 0 до 180 градусов).
+При малом количестве изображений можно сгенерировать дополнительные наборы данных путем поворота их на определенный угол, который задается перед запуском, или на произвольный угол (от 0 до 180 градусов).
 
 ### **Обучение признаков Хаара**
 
@@ -239,8 +235,7 @@ $ nohup ./haar1515.sh \>\$HOME/haar1515.txt 2\>&1 \< /dev/null &
 
 ![](./photo/20.png)
 
-C помощью **htop** можно отследить потребляемую оперативную память, а
-также нагрузку на процессор, благодаря чему было выявлено, что программа для обучения из библиотеки OpenCV не выделяет память в указанном размере в скрипте **haar1515.sh**.
+C помощью **htop** можно отследить, что программа для обучения из библиотеки OpenCV не выделяет память в указанном размере в скрипте **haar1515.sh**.
 
 Конечный результат вывода в файл **haar1515.txt** (последняя стадия обучения)
 
@@ -361,6 +356,81 @@ data = pd.read_csv('./../result_testing.csv')
 
 На выходе два нейрона, которые дают вероятностную оценку вершина или не вершина в %.
 
+#### **Скрипт для обучения СНС**
+```python
+# LeNet architecture
+def build(width, height, depth, classes):
+	# initialize the model
+	model = Sequential()
+	inputShape = (height, width, depth)
+
+	# if we are using "channels first", update the input shape
+	if K.image_data_format() == "channels_first":
+		inputShape = (depth, height, width)
+
+	# first set of CONV => RELU => POOL layers
+	model.add(Convolution2D(20, (5, 5), activation='relu',
+							input_shape=(height, width, depth)))
+
+	model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+	# second set of CONV => RELU => POOL layers
+	model.add(Convolution2D(50, (5, 5), activation='relu'))
+	# model.add(Activation("relu"))
+	model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+	# first (and only) set of FC => RELU layers
+	model.add(Flatten())
+	model.add(Dense(500, activation='relu'))
+	model.add(Dropout(0.5))
+
+	# softmax classifier
+	model.add(Dense(classes))
+	model.add(Activation("softmax"))
+
+	# return the constructed network architecture
+	return model
+
+# initialize the number of epochs to train for, initialize learning rate,
+# and batch size
+EPOCHS = 27
+INIT_LR = 1e-3
+BS = 32
+
+...
+
+# partition the data into training and testing splits using 75% of
+# the data for training and the remaining 25% for testing
+(trainX, testX, trainY, testY) = train_test_split(data,
+	labels, test_size=0.25, random_state=42)
+
+# convert the labels from integers to vectors
+trainY = to_categorical(trainY, num_classes=2)
+testY = to_categorical(testY, num_classes=2)
+
+# construct the image generator for data augmentation
+aug = ImageDataGenerator(rotation_range=30, width_shift_range=0.1,
+	height_shift_range=0.1, shear_range=0.2, zoom_range=0.2,
+	horizontal_flip=True, fill_mode="nearest")
+
+# initialize the model
+print("[INFO] compiling model...")
+model = build(width=28, height=28, depth=3, classes=2)
+opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
+# SGD(momentum=0.9)
+model.compile(optimizer=opt, loss='binary_crossentropy', metrics=["accuracy"])
+
+# train the network
+print("[INFO] training network...")
+H = model.fit_generator(aug.flow(trainX, trainY, batch_size=BS),
+	validation_data=(testX, testY), steps_per_epoch=len(trainX) // BS,
+	epochs=EPOCHS, verbose=1)
+```
+
+#### **Результаты обучения СНС**
+
+![](./photo/cnn.png)
+
 #### **Скрипт для тестирования СНС**
 ```python
 def neural_network(image, dirtocnn):
@@ -399,10 +469,8 @@ plt.show()
 ![](./photo/30.png)
 
 #### Лучший результат:
-```python
-sns.countplot(data['vertex_sort.model'])
-```
-![](./photo/31.png)
+
+**С учетом экспериментов лучше всего себя показала модель vertex_sort.model.**
 
 Было использовано 15 фото для анализа фильтра, основанный на нейронной сети. Общее затраченное время на анализ моделей: 4,5 часа. Следовательно, фильтрация, основанная на нейронной сети - дорогостоящая операция, но результативная, т.к. на случайных данных 40% фото были доведены до идеала (идеал - когда на фото были распознаны все вершины).
 
@@ -459,7 +527,7 @@ sns.countplot(data['vertex_sort.model'])
 Проводилось сравнение с моделями для поиска начал линий.
 ![](./photo/35.png)
 
-#### **Результат:**
+#### **Лучший результат:**
 ![](./photo/36.png)
 
 Использование каскадов не подходит из-за малой точности и большой
@@ -585,30 +653,39 @@ sns.countplot(data['vertex_sort.model'])
 
 Если коэффициент находится в допустимой области, то картинка будет такая же как слева.
 
-### Основные проблемы и их решения
-1.	При разрыве линии алгоритм движения Tracker может остановиться, т.к. попадет в провал точка пересечения окружности с траекторией Tracker.
-  - [x] Решение – сделать динамическое расширение окружности на каждом шаге Tracker
-2.	При пересечении линий алгоритм не работает, т.к. имеет много пересечений с траекторией Tracker
-  - [x] Решение – сделать динамическое расширение окружности на каждом шаге Tracker
-3.	Определение точек начала линии иногда дает плохой результат, если какая-либо линия проходит рядом с областью вершины (пример ниже).
-  - [x] Решение – двойная верификация вершин, т.е. движение Tracker производится сначала в одну сторону, а потом в другую.
-
-#### **Пример проблемы:**
-![](./photo/57.png)
-
-Примеры
+Результат
 ==========
 
-Original image | Preprocessing | Vertex Search | Find Start | Tracker | Result
---- | --- | --- | --- | --- | ---
-![](./photo/ex1_0.jpg) | ![](./photo/ex1_1.gif) | ![](./photo/ex1_2.gif) | ![](./photo/ex1_3.gif) | ![](./photo/ex1_4.gif) | ![](./photo/ex1_5.jpg)
-![](./photo/ex2_0.jpg) | ![](./photo/ex2_1.gif) | ![](./photo/ex2_2.gif) | ![](./photo/ex2_3.gif) | ![](./photo/ex2_4.gif) | ![](./photo/ex2_5.jpg)
-![](./photo/ex3_0.jpg) | ![](./photo/ex3_1.gif) | ![](./photo/ex3_2.gif) | ![](./photo/ex3_3.gif) | ![](./photo/ex3_4.gif) | ![](./photo/ex3_5.jpg)
-![](./photo/ex4_0.jpg) | ![](./photo/ex4_1.gif) | ![](./photo/ex4_2.gif) | ![](./photo/ex4_3.gif) | ![](./photo/ex4_4.gif) | ![](./photo/ex4_5.jpg)
+### Основные проблемы
+1.	При разрыве линии алгоритм движения Tracker может остановиться, т.к. попадет в провал точка пересечения окружности с траекторией Tracker.
+2.	При пересечении линий алгоритм не работает, т.к. имеет много пересечений с траекторией Tracker
 
-Original image | Preprocessing | Vertex Search with action | Find Start | Tracker | Result
+####  Пример проблемы:
+![](./photo/57.png)
+
+3.	Определение точек начала линии иногда дает плохой результат, если какая-либо линия проходит рядом с областью вершины (пример ниже).
+
+####  Пример проблемы:
+Original image -> Preprocessing | Vertex Search with action | Find Start | Tracker | Result
 --- | --- | --- | --- | --- | ---
-![](./photo/ex5_0.jpg) | ![](./photo/ex5_1.gif) | ![](./photo/ex5_2.gif) | ![](./photo/ex5_3.gif) | ![](./photo/ex5_4.gif) | ![](./photo/ex5_5.jpg)
+![](./photo/ex2_1.gif) | ![](./photo/ex2_2.gif) | ![](./photo/ex2_3.gif) | ![](./photo/ex2_4.gif) | ![](./photo/ex2_5.jpg)
+
+4. Для корректной работы нужно указывать индекс для фотографии, которая поступает на вход.
+5. Отсутсвие многопоточности, для поиска вершин и Tracker.
+
+### Другие примеры
+Original image -> Preprocessing | Vertex Search | Find Start | Tracker | Result
+--- | --- | --- | --- | --- | ---
+![](./photo/ex1_1.gif) | ![](./photo/ex1_2.gif) | ![](./photo/ex1_3.gif) | ![](./photo/ex1_4.gif) | ![](./photo/ex1_5.jpg)
+![](./photo/ex3_1.gif) | ![](./photo/ex3_2.gif) | ![](./photo/ex3_3.gif) | ![](./photo/ex3_4.gif) | ![](./photo/ex3_5.jpg)
+![](./photo/ex4_1.gif) | ![](./photo/ex4_2.gif) | ![](./photo/ex4_3.gif) | ![](./photo/ex4_4.gif) | ![](./photo/ex4_5.jpg)
+
+###  Пример, где активируется дополнительный фильтр пересечений:
+Original image -> Preprocessing | Vertex Search with action | Find Start | Tracker | Result
+--- | --- | --- | --- | --- | ---
+![](./photo/ex5_1.gif) | ![](./photo/ex5_2.gif) | ![](./photo/ex5_3.gif) | ![](./photo/ex5_4.gif) | ![](./photo/ex5_5.jpg)
+
+
 
 Литература
 ==========
