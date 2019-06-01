@@ -666,16 +666,16 @@ plt.show()
 3.	Определение точек начала линии иногда дает плохой результат, если какая-либо линия проходит рядом с областью вершины (пример ниже).
 
 ####  Пример проблемы:
-Original image -> Preprocessing | Vertex Search with action | Find Start | Tracker | Result
---- | --- | --- | --- | --- | ---
-![](./photo/ex2_1.gif) | ![](./photo/ex2_2.gif) | ![](./photo/ex2_3.gif) | ![](./photo/ex2_4.gif) | ![](./photo/ex2_5.jpg)
+Original image -> Preprocessing  |  Vertex Search with action  |  Find Start  |  Tracker  |  Result
+---  |  ---  |  ---  |  ---  |  ---  |  ---
+![](./photo/ex2_1.gif)  |   ![](./photo/ex2_2.gif)  |  ![](./photo/ex2_3.gif)  |  ![](./photo/ex2_4.gif)  |  ![](./photo/ex2_5.jpg)
 
 4. Для корректной работы нужно указывать индекс для фотографии, которая поступает на вход.
 5. Отсутсвие многопоточности, для поиска вершин и Tracker.
 
 ### Другие примеры
-Original image -> Preprocessing | Vertex Search | Find Start | Tracker | Result
---- | --- | --- | --- | --- | ---
+Original image -> Preprocessing  |  Vertex Search with action  |  Find Start  |  Tracker  |  Result
+---  |  ---  |  ---  |  ---  |  ---  |  ---
 ![](./photo/ex1_1.gif) | ![](./photo/ex1_2.gif) | ![](./photo/ex1_3.gif) | ![](./photo/ex1_4.gif) | ![](./photo/ex1_5.jpg)
 ![](./photo/ex3_1.gif) | ![](./photo/ex3_2.gif) | ![](./photo/ex3_3.gif) | ![](./photo/ex3_4.gif) | ![](./photo/ex3_5.jpg)
 ![](./photo/ex4_1.gif) | ![](./photo/ex4_2.gif) | ![](./photo/ex4_3.gif) | ![](./photo/ex4_4.gif) | ![](./photo/ex4_5.jpg)
