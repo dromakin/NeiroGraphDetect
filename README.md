@@ -396,8 +396,9 @@ Tracker Shoot | Tracker Shoot Zoom
 3.	Определение точек начала линии иногда дает плохой результат, если какая-либо линия проходит рядом с областью вершины (пример ниже).
 
 ####  Пример проблемы:
+
 Original image -> Preprocessing | Vertex Search with action | Find Start | Tracker | Result
---- | --- | --- | --- | --- | ---
+--- | --- | --- | --- | ---
 ![](./photo/ex2_1.gif) | ![](./photo/ex2_2.gif) | ![](./photo/ex2_3.gif) | ![](./photo/ex2_4.gif) | ![](./photo/ex2_5.jpg)
 
 4. Для корректной работы нужно указывать индекс для фотографии, которая поступает на вход.
@@ -407,14 +408,14 @@ Original image -> Preprocessing | Vertex Search with action | Find Start | Track
 ==========
 ### Положительный результат
 Original image -> Preprocessing | Vertex Search | Find Start | Tracker | Result
---- | --- | --- | --- | --- | ---
+--- | --- | --- | --- | ---
 ![](./photo/ex1_1.gif) | ![](./photo/ex1_2.gif) | ![](./photo/ex1_3.gif) | ![](./photo/ex1_4.gif) | ![](./photo/ex1_5.jpg)
 ![](./photo/ex3_1.gif) | ![](./photo/ex3_2.gif) | ![](./photo/ex3_3.gif) | ![](./photo/ex3_4.gif) | ![](./photo/ex3_5.jpg)
 ![](./photo/ex4_1.gif) | ![](./photo/ex4_2.gif) | ![](./photo/ex4_3.gif) | ![](./photo/ex4_4.gif) | ![](./photo/ex4_5.jpg)
 
 ###  Пример, где активируется дополнительный фильтр пересечений:
 Original image -> Preprocessing | Vertex Search with action | Find Start | Tracker | Result
---- | --- | --- | --- | --- | ---
+--- | --- | --- | --- | ---
 ![](./photo/ex5_1.gif) | ![](./photo/ex5_2.gif) | ![](./photo/ex5_3.gif) | ![](./photo/ex5_4.gif) | ![](./photo/ex5_5.jpg)
 
 
