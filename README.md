@@ -1,18 +1,26 @@
 # Курсовой проект
 Оцифровка графов
 =================
-Привет всем читателям Habrahabr, в этой статье я хочу поделиться с Вами своим первым проектом, который посвящен оцифровке неориентированных графов. Данная тема "на пальцах" освещается весьма плохо.
+Привет всем читателям Habrahabr!
+В этой статье я хочу поделиться с вами своим первым проектом, связанным с компьютерным зрением. Данная тема "на пальцах" освещается плохо.
+
+**В проекте затрагиваются темы:**
+- обработка изображения с помощью библиотеки OpenCV;
+- сверточные нейронные сети;
+- каскады Хаара;
+- сравнение различных алгоритмов распознавания из библиотеки OpenCV;
+- самописный алгоритм оцифровики графов.
 
 ## Результаты работы
-В результате работы алгоритма получается матрица смежности. Далее она используется для компьютерного отображения графа.
+На вход подается изображение графа, на выходе получаем матрицу смежности.
 
-На вход подается изображение с графом, нарисованным
-- на доске (слева), результат - справа
+Дальше используем матрицу чтобы нарисовать граф с помощью библиотеки.
+Граф нарисованный на доске (слева), результат - справа
 
 ![](./photo/58.png)
 ![](./photo/59.png)
 
-- на бумаге (слева), результат - справа
+Граф нарисованный на бумаге (слева), результат - справа
 
 ![](./photo/61.png)
 
@@ -22,19 +30,13 @@
 
 Программа разбита в несколько этапов:
 
-1.  На вход поступает изображение форматом .png .jpg .jpeg, и др. и
-    запускается скрипт с подготовкой (удаление шумов и инвертирование
-    цветов в 1 канал).
+1.  На вход поступает изображение форматом .png .jpg .jpeg, и др. и запускается скрипт для подготовки данных. (удаление шумов и инвертирование цветов в 1 канал).
 
-2.  VS: На изображении с помощью каскадов Хаара ищем вершины графа,
-    затем запускаем фильтрацию в 2 этапа (СНС и дополнительный
-    алгоритмический фильтр), сохраняем полученные данные файл для
-    следующего этапа.
+2.  VertexSearch: На изображении с помощью каскадов Хаара ищем вершины графа, затем запускаем фильтрацию в 2 этапа (СНС и дополнительный алгоритмический фильтр), сохраняем полученные данные файл для следующего этапа.
 
-3.  ES: Определяем начало движения Tracker* у каждой вершины графа с
-    помощью дополнительных прямоугольников.
+3.  EdgeSearch: Определяем начало движения Tracker* у каждой вершины графа с помощью дополнительных прямоугольников.
 
-4.  ES: Запускаем Tracker* для определения какие вершины соединены.
+4.  EdgeSearch: Запускаем Tracker* для определения какие вершины соединены.
 
 5.  Составляется удобный формат для дальнейшей визуализации.
 
@@ -52,13 +54,9 @@ P.s. Tracker* - собственное название разработанно
 
 Изображение подается на вход с префиксом green/white:
 
-1.  Если изображение больше, чем 900 пикселей в ширине или высоте, то
-    уменьшаем размер до 900x900 (размер на высоте или ширине должен быть
-    меньше или равен 900). Если изображение не квадратное, то сохраняя
-    пропорции уменьшаем самую большую сторону до 900.
+1.  Если изображение больше, чем 900 пикселей в ширине или высоте, то уменьшаем размер до 900x900 (размер на высоте или ширине должен быть меньше или равен 900). Если изображение не квадратное, то сохраняя пропорции уменьшаем самую большую сторону до 900.
 
-2.  Green - изображение с доски. Этапы: переводим в 1 канал, убираем
-    шумы и инвертируем цвета (чтобы выделить черным контур графа)
+2.  Green - изображение с доски. Этапы: переводим в 1 канал, убираем шумы и инвертируем цвета (чтобы выделить черным контур графа)
 
 3.  White - изображение с листка бумаги. Этапы: переводим в 1 канал.
 
@@ -66,18 +64,15 @@ P.s. Tracker* - собственное название разработанно
 Поиск вершин графа (Vertex Search)
 ======================
 
-Подготовленное изображение подается на алгоритм, который состоит из
-несколько шагов:
+Обработанное изображение подается на вход алгоритму, который состоит из несколько шагов:
 
-1.  [Каскады Хаара](https://habr.com/ru/company/recognitor/blog/228195/)
+1.  [Каскады Хаара](https://habr.com/ru/company/recognitor/blog/228195/).
 
-2.  Фильтр, реализованный с помощью сверточной нейронной сети
+2.  Фильтр, реализованный с помощью сверточной нейронной сети.
 
-3.  Алгоритмический фильтр
+3.  Алгоритмический фильтр.
 
-**Каскады Хаара**
------------------
-
+## **Каскады Хаара**
 ### **Почему каскады Хаара?**
 
 Для поиска окружностей рассматривалаись 4 алгоритма:
@@ -88,72 +83,56 @@ P.s. Tracker* - собственное название разработанно
 
 Первые 2 не подошли из-за маленького числа распознанных вершин при тестировании, а предпоследний алгоритм может конкурировать с каскадами, но ему требуется уникальные коэффициенты, которые подходят для данного изображения, по этой причине были выбраны Каскады Хаара.
 
-#### Основа каскада Хаара
-В основе каскадов Хаара из библиотеки OpenCV лежит метод Виолы-Джонса (Viola-Jones)(чаще всего его используют для распознавания лиц), который основывается на следующих принципах:
-1. используются изображения в [интегральном представлении](https://en.wikipedia.org/wiki/Summed-area_table), что позволяет вычислять быстро необходимые объекты;
-2. используются [признаки Хаара](https://en.wikipedia.org/wiki/Haar-like_feature), с помощью которых происходит поиск нужного объекта;
-3. используется [boost](http://machinelearning.ru/wiki/index.php?title=Бустинг) (от англ. boost – улучшение, усиление) для выбора наиболее подходящих признаков для искомого объекта на данной части изображения;
-4. все признаки поступают на вход [классификатора](https://ru.wikipedia.org/wiki/Задача_классификации), который даёт результат «верно» либо «ложь»;
-5. используются каскады признаков для быстрого отбрасывания окон, где не найден искомый объект.
-
-Ссылка: [Подробное описание про каждый признак](https://habr.com/ru/post/133826/)
-
-
 ### **Подготовка данных**
-
-Все разработанные программы применялись для создания датасета для обучения каскадов Хаара.
-
-#### **Программа для создания набора данных для обучения**
-
-Для успешного обучения потребуется большое количество «отрицательных» и «положительных» образцов. Для более удобной разметки изображений используется разработанная программа, которая позволяет получить изображения вершин графа, путем выделения нужной области в ходе работы программы.
-
-![](./photo/14.png)
-
-#### **Пример данных для обучения:**
-Также с помощью программы можно сформировать индексный файл с расширением .dat для дальнейшего обучения каскадов Хаара (фотография выше).
-
-![](./photo/16.png)
-
-#### **Программа для генерации дополнительного набора данных для обучения**
-
-<img src="./photo/17.jpg" width="900">
-
-При малом количестве изображений можно сгенерировать дополнительные наборы данных путем поворота их на определенный угол, который задается перед запуском, или на произвольный угол (от 0 до 180 градусов).
+Для успешного обучения потребуется большое количество «отрицательных» и «положительных» образцов. Для более удобной разметки изображений используется разработанная программа, которая позволяет получить изображения вершин графа, путем выделения нужной области в ходе работы программы, а также сформировать индексный файл с расширением .dat для дальнейшего обучения каскадов Хаара. При малом количестве изображений можно сгенерировать дополнительные наборы данных путем поворота их на определенный угол, который задается перед запуском, или на произвольный угол (от 0 до 180 градусов).
 
 ### **Обучение признаков Хаара**
-
-#### **Визуализация обучения каскада Хаара**
-Фичи, которые выделяет каскад при обучении можно увидеть, используя следующий скрипт: (подробнее: [тут](https://docs.opencv.org/3.3.0/dc/d88/tutorial_traincascade.html))
-```
-opencv_visualisation --image=/data/object.png --model=/data/model.xml --data=/data/result/
-```
-
-#### **Кратко об обучении каскадов Хаара на облачном ресурсе**
 Информацию о том как обучить каскады Хаара локально у себя на компьюторе можно найти [тут](https://habr.com/ru/post/208092/), [тут](https://docs.opencv.org/3.3.0/dc/d88/tutorial_traincascade.html) и [тут](https://medium.com/@a5730051/train-dataset-to-xml-file-for-cascade-classifier-opencv-43a692b74bfe).
-Обучение различных моделей Хаара производилось на [GCP](https://cloud.google.com), на виртуальной машине Ubuntu 16.04 LTS.
+Обучение различных моделей Хаара производилось на облачном вычислительном ресурсе:[Google Cloud Platform](https://cloud.google.com), на виртуальной машине Ubuntu.
 
-![](./photo/18.png)
+Этапы запуска и скрипты можно посмотреть в репозитории [здесь](https://github.com/Dmitriy1594/NeiroGraphDetect/tree/Steps-of-project/Vertex/haar/GCP/script)
 
-Обучение каскадов осуществлялось следующим образом: с помощью данной консоли запускали скрипт **haar1515.sh**, который запускал обучение. В этом файле прописаны команды для запуска обучения, фото ниже:
-
-![](./photo/19.png)
-
-Скрипт запускается в deamon процессе с записью в .txt:
-```
-$ nohup ./haar1515.sh \>\$HOME/haar1515.txt 2\>&1 \< /dev/null &
-```
-
-Для отслеживания аппаратных ресурсов и прогресса применялась старая добрая утилита
-**htop**. C помощью нее определил, что программа для обучения из библиотеки OpenCV не выделяет память в указанном размере в скрипте **haar1515.sh**, поэтому ждать пришлось достаточно долго.
-
-Конечный результат вывода в файл **haar1515.txt** (последняя стадия обучения)
-
-![](./photo/21.png)
-
-Каскады Хаара обучал на CPU. Поиск для обучения на GPU ничего не дал, буду благодарен за пруфы в комментариях.
-В данном случае 23 стадия обучалась 31 день. Это не предел, поэтому каскады Хаара обучались не более, чем на **25 эпохах**, используя **8 ядер** и не менее **40 Гб** оперативной памяти.
+Каскады Хаара обучались долго из-за того, что обучал на CPU. Поиск для обучения на GPU ничего не дал, буду благодарен за пруфы в комментариях.
 
 ### **Выбор обученной модели Хаара**
+Код для тестирования каскада Хаара:
+```python
+def haartest(image):
+    # This is the cascade we just made. Call what you want
+    cascade30 = cv2.CascadeClassifier('./models/haar/haar_2020_2/cascade.xml')
+    img = cv2.imread(image)
+    if img is None:
+        exit(0)
+    img_c = img.copy()
+    # filters
+    gray = cv2.cvtColor(img_c, cv2.COLOR_BGR2GRAY)
+    # gaus = cv2.GaussianBlur(gray, (5, 5), 2)
+    vertex30 = cascade30.detectMultiScale(gray)
+    it = 0
+    # get rectangle
+    for (x, y, w, h) in vertex30:
+        crop_img = img[y:y + h, x:x + w]
+        label = neural_network_2828(crop_img)
+
+        # put text
+        if (label[0] == "Vertex"):
+            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 2)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(img, 'V'+label[2], (x - 2, y - 2), font, 0.5, (255, 0, 255), 1, cv2.LINE_AA)
+        else:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(img, 'NV'+label[2], (x - 2, y - 2), font, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+        it += 1
+
+    # save image
+    x = image.split("/")
+    print(x[-1])
+    path = './results/result_Haar_NN_test/'
+    # cv2.imshow('img',img)
+    cv2.imwrite(path + x[-1], img)
+```
+
 #### Как выбирается лучший каскад?
 1. Создаем файл csv для дальнейшего его анализа c помощью библиотеки pandas и seaborn
 2. Анализируем данные, строим диаграммы для каждой модели
@@ -163,115 +142,154 @@ $ nohup ./haar1515.sh \>\$HOME/haar1515.txt 2\>&1 \< /dev/null &
 Проанализируем каждый каскад в целом с помощью диаграмм:
 <img src="./photo/26.png" width="900">
 
-**С помощью диаграммы находим, что
-минимальное число ложных срабатываний (число нераспознанных вершин)
-имеет каскад Хаара 20x20 2 типа.**
+**Ось ординат** - число распознанных вершин в общей сумме
+**Ось абсцисс** - количество вершин
+
+Видно, что минимальное число ложных срабатываний (число нераспознанных вершин) имеет каскад Хаара 20x20 2 типа.
 
 **Отсюда делаем вывод:**
-Лучшая обученная модель каскадов - Хаар 20x20 2 типа:
+Отсюда делаем вывод - будем использовать Хаар 20x20 2 типа:
 <img src="./photo/27.png" width="500">
 
-**Фильтр СНС**
+**Фильтр сверточной нейронной сети**
 --------------
-Из-за того, что каскады Хаара иногда выделяют пересечения линий, похожие на вершину графа, то данные случаи необходимо свести к минимуму с помощью сверточной нейронной сети. Задача СНС (Сверточной Нейронной Сети) - классификация вершин.
+Из-за того, что каскады Хаара иногда выделяют пересечения линий, похожие на вершину графа, то данные случаи необходимо свести к минимуму с помощью сверточной нейронной сети. Задача сверточной нейронной сети (СНС) - классификация вершин.
 
 О том как работает свертка в изображении можно найти в моем репозитории в ветке Steps-of-project: [Ccылка](https://github.com/Dmitriy1594/NeiroGraphDetect/tree/Steps-of-project/Image%20processing/Convolutional-Layers)
 Подробнее о том, что такое сверточная нейронная сеть - [ссылка](https://habr.com/ru/post/348000/)
 
 #### Архитектура
-**За основу архитектуры нейронной сети была
-взята сверточная нейронная сеть LeNet5:**
+**За основу архитектуры нейронной сети была взята сверточная нейронная сеть LeNet5:**
 ![](./photo/28.png)
 
 Так как вершина графа является кругом, то для измененной архитектуры СНС число features maps на каждом этапе свертки примерно такое же, как и для различных букв алфавита, которые используется для обучения нейронной сети на изображении.
 
-**В результате многочисленных экспериментов
-была найдена оптимальная архитектура СНС:**
+**В результате многочисленных экспериментов была найдена оптимальная архитектура СНС:**
 ![](./photo/29.png)
 
-На выходе два нейрона, которые дают вероятностную оценку вершина или не вершина в %.
+На выходе два нейрона, которые дают вероятностную оценку вершина или не вершина.
 
-#### **Скрипт для обучения СНС**
+Код для обучения СНС:
 ```python
-  # LeNet architecture
-  def build(width, height, depth, classes):
-  	# initialize the model
-  	model = Sequential()
-  	inputShape = (height, width, depth)
+# LeNet architecture
+def build(width, height, depth, classes):
+    # initialize the model
+    model = Sequential()
+    inputShape = (height, width, depth)
 
-  	# if we are using "channels first", update the input shape
-  	if K.image_data_format() == "channels_first":
-  		inputShape = (depth, height, width)
+    # if we are using "channels first", update the input shape
+    if K.image_data_format() == "channels_first":
+        inputShape = (depth, height, width)
 
-  	# first set of CONV => RELU => POOL layers
-  	model.add(Convolution2D(20, (5, 5), activation='relu',
-  							input_shape=(height, width, depth)))
+    # first set of CONV => RELU => POOL layers
+    model.add(Convolution2D(20, (5, 5), activation='relu',
+                            input_shape=(height, width, depth)))
 
-  	model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
-  	# second set of CONV => RELU => POOL layers
-  	model.add(Convolution2D(50, (5, 5), activation='relu'))
-  	# model.add(Activation("relu"))
-  	model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    # second set of CONV => RELU => POOL layers
+    model.add(Convolution2D(50, (5, 5), activation='relu'))
+    # model.add(Activation("relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
-  	# first (and only) set of FC => RELU layers
-  	model.add(Flatten())
-  	model.add(Dense(500, activation='relu'))
-  	model.add(Dropout(0.5))
+    # first (and only) set of FC => RELU layers
+    model.add(Flatten())
+    model.add(Dense(500, activation='relu'))
+    model.add(Dropout(0.5))
 
-  	# softmax classifier
-  	model.add(Dense(classes))
-  	model.add(Activation("softmax"))
+    # softmax classifier
+    model.add(Dense(classes))
+    model.add(Activation("softmax"))
 
-  	# return the constructed network architecture
-  	return model
+    # return the constructed network architecture
+    return model
 
-  # initialize the number of epochs to train for, initialize learning rate,
-  # and batch size
-  EPOCHS = 27
-  INIT_LR = 1e-3
-  BS = 32
+# initialize the number of epochs to train for, initialize learning rate,
+# and batch size
+EPOCHS = 27
+INIT_LR = 1e-3
+BS = 32
 
-  ...
+...
 
-  # partition the data into training and testing splits using 75% of
-  # the data for training and the remaining 25% for testing
-  (trainX, testX, trainY, testY) = train_test_split(data,
-  	labels, test_size=0.25, random_state=42)
+# partition the data into training and testing splits using 75% of
+# the data for training and the remaining 25% for testing
+(trainX, testX, trainY, testY) = train_test_split(data,
+labels, test_size=0.25, random_state=42)
 
-  # convert the labels from integers to vectors
-  trainY = to_categorical(trainY, num_classes=2)
-  testY = to_categorical(testY, num_classes=2)
+# convert the labels from integers to vectors
+trainY = to_categorical(trainY, num_classes=2)
+testY = to_categorical(testY, num_classes=2)
 
-  # construct the image generator for data augmentation
-  aug = ImageDataGenerator(rotation_range=30, width_shift_range=0.1,
-  	height_shift_range=0.1, shear_range=0.2, zoom_range=0.2,
-  	horizontal_flip=True, fill_mode="nearest")
+# construct the image generator for data augmentation
+aug = ImageDataGenerator(rotation_range=30, width_shift_range=0.1,
+height_shift_range=0.1, shear_range=0.2, zoom_range=0.2,
+horizontal_flip=True, fill_mode="nearest")
 
-  # initialize the model
-  print("[INFO] compiling model...")
-  model = build(width=28, height=28, depth=3, classes=2)
-  opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
-  # SGD(momentum=0.9)
-  model.compile(optimizer=opt, loss='binary_crossentropy', metrics=["accuracy"])
+# initialize the model
+print("[INFO] compiling model...")
+model = build(width=28, height=28, depth=3, classes=2)
+opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
+# SGD(momentum=0.9)
+model.compile(optimizer=opt, loss='binary_crossentropy', metrics=["accuracy"])
 
-  # train the network
-  print("[INFO] training network...")
-  H = model.fit_generator(aug.flow(trainX, trainY, batch_size=BS),
-  	validation_data=(testX, testY), steps_per_epoch=len(trainX) // BS,
-  	epochs=EPOCHS, verbose=1)
+# train the network
+print("[INFO] training network...")
+H = model.fit_generator(aug.flow(trainX, trainY, batch_size=BS),
+validation_data=(testX, testY), steps_per_epoch=len(trainX) // BS,
+epochs=EPOCHS, verbose=1)
 ```
 
 #### **Результаты обучения СНС**
 <img src="./photo/cnn.png" width="600">
 
+#### Статистика по СНС:
+Код для тестирования СНС:
+```python
+def neural_network(image, dirtocnn):
+    orig = image
+    # pre-process the image for classification
+    image = cv2.resize(image, (28, 28))
+    image = image.astype("float") / 255.0
+    image = img_to_array(image)
+    image = np.expand_dims(image, axis=0)
+    print("[INFO] loading network...")
+    # load model
+    model = load_model('./../models/neural_networks/' + dirtocnn)
+    vertex = 0
+    notVertex = 0
+    print(dirtocnn.split('_')[0])
+    # classify the input image
+    if dirtocnn.split('_')[0] == 'not':
+        (vertex, notVertex) = model.predict(image)[0]
+    else:
+        (notVertex, vertex) = model.predict(image)[0]
+
+    label = "Vertex" if vertex > notVertex else "Not Vertex"
+    proba = vertex if vertex > notVertex else notVertex
+    labelprob = "{}: {:.2f}%".format(label, proba * 100)
+    return (label, labelprob, str(float("{0:.2f}".format(proba * 100))))
+```
+**Диаграмма**
+<img src="./photo/30.png" width="800">
+Для .model:
+**Ось ординат** - количество изображений
+**Ось абсцисс**: 0 - количество изображений не совпавшим с их числом на изображении, 1 - инвертированный 0.
+
+Для .model_NV:
+**Ось ординат** - количество изображений.
+**Ось абсцисс** - количество изображение попавшие под фильтрацию.
+
 #### Лучший результат:
+<img src="./photo/31.png" width="400">
+
+**Ось ординат** - количество изображений
+**Ось абсцисс**: 0 - количество изображений не совпавшим с их числом на изображении, 1 - инвертированный 0.
 
 **С учетом экспериментов лучше всего себя показала модель vertex_sort.model.**
-Было использовано 15 фото для анализа фильтра, основанный на нейронной сети. Общее затраченное время на анализ моделей: 4,5 часа. Следовательно, фильтрация, основанная на нейронной сети - дорогостоящая операция, но результативная, т.к. на случайных данных 40% фото были доведены до идеала (идеал - когда на фото были распознаны все вершины).
+Было использовано 15 фото для анализа фильтра, основанный на нейронной сети. Общее затраченное время на анализ моделей: 4,5 часа. Фильтрация, основанная на нейронной сети - дорогостоящая операция, но эффективная.
 
-**Дополнительный фильтр пересечений**
--------------------------------------
+### Дополнительный фильтр пересечений
 **Данный фильтр позволяет избавится от некоторых случаев пересечения:**
 ![](./photo/32.png)
 
@@ -282,16 +300,14 @@ $ nohup ./haar1515.sh \>\$HOME/haar1515.txt 2\>&1 \< /dev/null &
 
 ![](./photo/ex5_2.gif)
 
-Результат работы каскада Хаара
--------------------------------------
+### Результаты подготовки данных
 Каскад Хаара | Фильтр СНС | Результат
 --- | --- | ---
 ![](./photo/haar_1.jpg)  | ![](./photo/haar_cnn_1.jpg)   |  ![](./photo/vertex_predict_1.jpg)
 ![](./photo/haar_2.jpg)  | ![](./photo/haar_cnn_2.jpg)   |  ![](./photo/vertex_predict_2.jpg)
 
 
-Поиск начал линий (Edge Search)
-=====================
+## Определение граней графа (Edge Search)
 
 Для того чтобы определить линию, необходимо знать:
 
