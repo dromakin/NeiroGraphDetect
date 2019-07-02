@@ -14,7 +14,7 @@
 ## Результаты работы
 На вход подается изображение графа, на выходе получаем матрицу смежности.
 
-Дальше используем матрицу чтобы нарисовать граф с помощью библиотеки.
+Дальше используем матрицу, чтобы нарисовать граф с помощью библиотеки [NetworkX](https://networkx.github.io/)
 Граф нарисованный на доске (слева), результат - справа
 
 ![](./photo/58.png)
@@ -417,7 +417,7 @@ Tracker Shoot | Tracker Shoot Zoom
 
 Original image -> Preprocessing | Vertex Search with action | Find Start | Tracker | Result
 --- | --- | --- | --- | ---
-![](./photo/ex2_1.gif) | ![](./photo/ex2_2.gif) | ![](./photo/ex2_3.gif) | ![](./photo/ex2_4.gif) | ![](./photo/ex2_5.jpg)
+![](./photo/ex2_1.gif) | ![](./photo/ex2_2.gif) | ![](./photo/ex2_3.gif) | ![](./photo/ex2_4.gif) | ![](./photo/ex2_5.png)
 
 4. Для корректной работы этапа подготовки необходимо указывать индекс для фотографии, которая поступает на вход.
 5. Отсутсвие многопоточности, для поиска вершин и Tracker.
@@ -426,14 +426,14 @@ Original image -> Preprocessing | Vertex Search with action | Find Start | Track
 ### Положительный результат
 Original image -> Preprocessing | Vertex Search | Find Start | Tracker | Result
 --- | --- | --- | --- | ---
-![](./photo/ex1_1.gif) | ![](./photo/ex1_2.gif) | ![](./photo/ex1_3.gif) | ![](./photo/ex1_4.gif) | ![](./photo/ex1_5.jpg)
-![](./photo/ex3_1.gif) | ![](./photo/ex3_2.gif) | ![](./photo/ex3_3.gif) | ![](./photo/ex3_4.gif) | ![](./photo/ex3_5.jpg)
-![](./photo/ex4_1.gif) | ![](./photo/ex4_2.gif) | ![](./photo/ex4_3.gif) | ![](./photo/ex4_4.gif) | ![](./photo/ex4_5.jpg)
+![](./photo/ex1_1.gif) | ![](./photo/ex1_2.gif) | ![](./photo/ex1_3.gif) | ![](./photo/ex1_4.gif) | ![](./photo/ex1_5.png)
+![](./photo/ex3_1.gif) | ![](./photo/ex3_2.gif) | ![](./photo/ex3_3.gif) | ![](./photo/ex3_4.gif) | ![](./photo/ex3_5.png)
+![](./photo/ex4_1.gif) | ![](./photo/ex4_2.gif) | ![](./photo/ex4_3.gif) | ![](./photo/ex4_4.gif) | ![](./photo/ex4_5.png)
 
 ###  Пример, где активируется дополнительный фильтр пересечений:
 Original image -> Preprocessing | Vertex Search with action | Find Start | Tracker | Result
 --- | --- | --- | --- | ---
-![](./photo/ex5_1.gif) | ![](./photo/ex5_2.gif) | ![](./photo/ex5_3.gif) | ![](./photo/ex5_4.gif) | ![](./photo/ex5_5.jpg)
+![](./photo/ex5_1.gif) | ![](./photo/ex5_2.gif) | ![](./photo/ex5_3.gif) | ![](./photo/ex5_4.gif) | ![](./photo/ex5_5.png)
 
 ## Литература
 1.  https://www.pyimagesearch.com/2017/08/21/deep-learning-with-opencv/
