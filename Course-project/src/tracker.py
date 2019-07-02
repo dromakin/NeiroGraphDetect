@@ -10,6 +10,7 @@ import os
 libdir = os.path.dirname('./src/')
 sys.path.append(os.path.split(libdir)[0])
 from src.libs import lib_lineStart_Tracker as module
+from src.libs import lib_graphMatrix as graphMatrix
 # from src import lib_connect_lines_hough as hough
 from src.libs import canny
 
@@ -221,9 +222,6 @@ def findStartTracker(image):
     runTracker(img_c, coorRoadTracker, vertex_tracker, newvs)
 
     '''STEP 5: Draw results'''
-    height, width, channels = img_c.shape
-    tracker_predict = np.zeros((height, width, channels), np.uint8)
-
     for vertex in newvs:
         x = int(vertex[0])
         y = int(vertex[1])
@@ -243,25 +241,13 @@ def findStartTracker(image):
         d = module.updateDvertex(d)
         cv2.rectangle(img_c, (x - d, y - d), (x + w + d, y + h + d), (0, 165, 255), 2)
 
-        # Tracker_predict
-        cv2.circle(tracker_predict, (x_c, y_c), r, (0, 0, 255), 2)
-
     for i in start_line:
         cv2.circle(img_c, (i[1], i[0]), 10, (255, 0, 255), 3)
 
-    for line_draw in module.graphReady:
-        vertexF = line_draw[0]
-        x_c_F = int(vertexF[4])
-        y_c_F = int(vertexF[5])
-
-        vertexL = line_draw[1]
-        x_c_L = int(vertexL[4])
-        y_c_L = int(vertexL[5])
-        cv2.line(tracker_predict, (x_c_F, y_c_F), (x_c_L, y_c_L),
-                 (0, 0, 255), 2)
+    # Last step: save adjency matrix
+    graphMatrix.GraphMatrix(module.graphReady, img_c, False)
 
     cv2.imwrite(module.folder + "Start_lines.jpg", img_c)
-    cv2.imwrite(module.folder + "image_predict.jpg", tracker_predict)
     return
 
 
@@ -277,7 +263,7 @@ if __name__ == '__main__':
     image = sys.argv[1]
 
     # path to folder
-    path = sys.argv[2] #"./vs2/vertex_search.graphvs"
+    path = sys.argv[2]
 
     findStartTracker(image)
 

@@ -1,6 +1,6 @@
 # USAGE
-# python src/preprocessing.py -i ./data/green/IMG_3095.JPG -t green
-# python src/preprocessing.py -i ./data/white/6.JPG -t white
+# python src/preprocessing.py -i ./data/green/IMG_3111.JPG -t green
+# python src/preprocessing.py -i ./data/white/8.JPG -t white
 
 import argparse
 import shutil
@@ -19,19 +19,19 @@ def preprocessing(image, type=None, save=False):
     if ((height > 900) | (width > 900)):
         img = module.resizeImage(img, width=900, height=900, save=True)
 
-    if ((type == 'Green') | (type == 'green')):
+    if (type in ['Green', 'green']):
         # filtering
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         kernel_size = 5
         blur_gray = cv2.GaussianBlur(gray, (kernel_size, kernel_size), 2)
         imgbit = cv2.bitwise_not(blur_gray)
-        if save == True:
+        if save:
             module.saveImage(path + 'preprocessing.jpg', imgbit)
 
         return imgbit
     else:
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        if save == True:
+        if save:
             module.saveImage(path + 'preprocessing.jpg', gray)
 
         return gray

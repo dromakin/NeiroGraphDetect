@@ -956,8 +956,7 @@ def trackerShoot(img_c, newvs, vertex_tracker, R):
 
                     getKRect(img_c, centre1, (x_c_v, x_c_v), vert)
 
-                    cv2.line(img_c, (centre1[1], centre1[0]), (x_c_v, y_c_v),
-                             (0, 255, 0), 2)
+                    cv2.line(img_c, (centre1[1], centre1[0]), (x_c_v, y_c_v), (0, 255, 0), 2)
 
                     if (((graphPreReady[0], vert) not in graphReady) &
                             ((vert, graphPreReady[0]) not in graphReady) &
