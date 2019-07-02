@@ -130,9 +130,6 @@ P.s. Tracker* - собственное название разработанно
 ```
 opencv_visualisation --image=/data/object.png --model=/data/model.xml --data=/data/result/
 ```
-**Пример обучения каскадов с визуализацией**
-
-[![64](http://img.youtube.com/vi/hPCTwxF0qf4/0.jpg)](http://www.youtube.com/watch?v=hPCTwxF0qf4 "Визуализация обучения каскадов Хаара")
 
 #### **Кратко об обучении каскадов Хаара на облачном ресурсе**
 Информацию о том как обучить каскады Хаара локально у себя на компьюторе можно найти [тут](https://habr.com/ru/post/208092/), [тут](https://docs.opencv.org/3.3.0/dc/d88/tutorial_traincascade.html) и [тут](https://medium.com/@a5730051/train-dataset-to-xml-file-for-cascade-classifier-opencv-43a692b74bfe).
