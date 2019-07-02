@@ -296,7 +296,7 @@ $ nohup ./haar1515.sh \>\$HOME/haar1515.txt 2\>&1 \< /dev/null &
 ![](./photo/haar_2.jpg)  | ![](./photo/haar_cnn_2.jpg)   |  ![](./photo/vertex_predict_2.jpg)
 
 
-Поиск начал линий
+Поиск начал линий (Edge Search)
 =====================
 
 Для того чтобы определить линию, необходимо знать:
