@@ -80,12 +80,13 @@ P.s. Tracker* - собственное название разработанно
 
 ### **Почему каскады Хаара?**
 
-Для поиска окружностей рассматривалаись 3 алгоритма:
+Для поиска окружностей рассматривалаись 4 алгоритма:
 1.  Simple Blob Detector ([example](https://www.learnopencv.com/blob-detection-using-opencv-python-c/), [documentation](https://docs.opencv.org/3.4.3/d0/d7a/classcv_1_1SimpleBlobDetector.html))
 2.  MSER Blob Detector ([example](http://qaru.site/questions/2443082/merge-mser-detected-objetcs-opencv-python), [documentation](https://docs.opencv.org/2.4/modules/features2d/doc/feature_detection_and_description.html?highlight=mser))
 3.  Hough Circles ([example](https://www.pyimagesearch.com/2014/07/21/detecting-circles-images-using-opencv-hough-circles/), [documentation](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghcircles/py_houghcircles.html))
+4. Каскады Хаара
 
-Первые 2 не подошли из-за маленького числа распознанных вершин при тестировании, а последний алгоритм может конкурировать с каскадами, но ему требуется уникальные коэффициенты, которые подходят для данного изображения.
+Первые 2 не подошли из-за маленького числа распознанных вершин при тестировании, а предпоследний алгоритм может конкурировать с каскадами, но ему требуется уникальные коэффициенты, которые подходят для данного изображения, по этой были выбраны Каскады Хаара.
 
 #### Основа каскада Хаара
 В основе каскадов Хаара из библиотеки OpenCV лежит метод Виолы-Джонса (Viola-Jones)(чаще всего его используют для распознавания лиц), который основывается на следующих принципах:
