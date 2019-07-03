@@ -115,10 +115,6 @@ def largest_rotated_rect(w, h, angle):
     Given a rectangle of size wxh that has been rotated by 'angle' (in
     radians), computes the width and height of the largest possible
     axis-aligned rectangle within the rotated rectangle.
-
-    Original JS code by 'Andri' and Magnus Hoff from Stack Overflow
-
-    Converted to Python by Aaron Snoswell
     """
 
     quadrant = int(math.floor(angle / (math.pi / 2))) & 3
@@ -329,7 +325,7 @@ if __name__ == "__main__":
     angle = 0
     if answ2 == False:
         if answ1 == True:
-            print("Write you angle in radians: ")
+            print("Write you angle: ")
         angle = float(input())
 
     refactor(angle)
