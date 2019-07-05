@@ -225,12 +225,12 @@ def neural_network_2828(image, modelnn):
     return (label, round(proba * 100, 2), str(float("{0:.2f}".format(proba * 100))))
 
 
-def haartest(image):
+def haartest(image_path):
     # This is the cascade we just made.
     cascade = cv2.CascadeClassifier('./PATH/TO/YOUR/cascade.xml')
     
     # read image
-    img = cv2.imread(image)
+    img = cv2.imread(image_path)
     # copy image
     img_c = img.copy()
     # filter cvtColor
@@ -271,7 +271,7 @@ def haartest(image):
                         font, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
 
     # save image
-    x = image.split("/")    # image name save to variable to x
+    x = image_path.split("/")    # image name save to variable to x
     path = './PATH/TO/SAVE/YOUR/IMAGE/'
     cv2.imwrite(path + x[-1], img)
     return img
