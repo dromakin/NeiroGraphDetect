@@ -93,46 +93,7 @@
 #### Выбор обученной модели Хаара
 После обучения нескольких моделей настало время выбрать лучшую. Для этого просто найдем модель, которая дает наименьшую ошибку на тестовых данных.
 
-Ниже код для тестирования каскада Хаара:
-```python
-def haartest(image):
-    # This is the cascade we just made. Call what you want
-    cascade30 = cv2.CascadeClassifier('./models/haar/haar_2020_2/cascade.xml')
-    img = cv2.imread(image)
-    if img is None:
-        exit(0)
-    img_c = img.copy()
-    # filters
-    gray = cv2.cvtColor(img_c, cv2.COLOR_BGR2GRAY)
-    # gaus = cv2.GaussianBlur(gray, (5, 5), 2)
-    vertex30 = cascade30.detectMultiScale(gray)
-    it = 0
-    # get rectangle
-    for (x, y, w, h) in vertex30:
-        crop_img = img[y:y + h, x:x + w]
-        label = neural_network_2828(crop_img)
-
-        # put text
-        if (label[0] == "Vertex"):
-            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 2)
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            cv2.putText(img, 'V'+label[2], (x - 2, y - 2), font, 0.5, (255, 0, 255), 1, cv2.LINE_AA)
-        else:
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            cv2.putText(img, 'NV'+label[2], (x - 2, y - 2), font, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
-        it += 1
-
-    # save image
-    x = image.split("/")
-    print(x[-1])
-    path = './results/result_Haar_NN_test/'
-    # cv2.imshow('img',img)
-    cv2.imwrite(path + x[-1], img)
-```
-
-Ниже можно увидеть сводное изображение всех диаграмм для каждой модели каскада Хаара.
-Диаграммы показывают зависимость количества фотографий от числа вершин.
+В ходе тестирования было создано сводное изображение всех диаграмм для каждой модели каскада Хаара, которое можно увидеть ниже. Диаграммы показывают зависимость количества фотографий от числа вершин.
 <img src="./photo/26.png" width="900">
 
 Видно, что минимальное число ложных срабатываний (число нераспознанных вершин) имеет каскад Хаара 20x20 2 типа.
@@ -226,7 +187,6 @@ epochs=EPOCHS, verbose=1)
 <img src="./photo/cnn.png" width="600">
 
 ### Дополнительный фильтр пересечений
-
 Бывали редкие случаи, когда каскады Хаара и СНС одну вершину принимали за несколько.
 Чтобы избавиться от этого дефекта, используется дополнительный фильтр.
 ![](./photo/32.png)
@@ -239,6 +199,83 @@ epochs=EPOCHS, verbose=1)
 --- | --- | ---
 ![](./photo/haar_1.jpg)  | ![](./photo/haar_cnn_1.jpg)   |  ![](./photo/vertex_predict_1.jpg)
 ![](./photo/haar_2.jpg)  | ![](./photo/haar_cnn_2.jpg)   |  ![](./photo/vertex_predict_2.jpg)
+
+Если есть желание, то протестировать модель каскадов Хаара и фильта СНС можно с помощью следующего кода:
+```python
+def neural_network_2828(image, modelnn):
+    # copy image
+    orig = image.copy()
+    
+    # pre-process the image for classification
+    image = cv2.resize(image, (28, 28))
+    image = image.astype("float") / 255.0
+    image = img_to_array(image)
+    image = np.expand_dims(image, axis=0)
+    
+    # load the trained convolutional neural network
+    print("[INFO] loading network...")
+    model = load_model(modelnn)    # modelnn - path to your model
+    
+    # classify the input image
+    (notVertex, vertex) = model.predict(image)[0]
+    
+    # build the label and return it
+    label = "Vertex" if vertex > notVertex else "Not Vertex"
+    proba = vertex if vertex > notVertex else notVertex
+    return (label, round(proba * 100, 2), str(float("{0:.2f}".format(proba * 100))))
+
+
+def haartest(image):
+    # This is the cascade we just made.
+    cascade = cv2.CascadeClassifier('./PATH/TO/YOUR/cascade.xml')
+    
+    # read image
+    img = cv2.imread(image)
+    # copy image
+    img_c = img.copy()
+    # filter cvtColor
+    gray = cv2.cvtColor(img_c, cv2.COLOR_BGR2GRAY)
+    
+    # Haar detecting results save to variable vertex
+    vertex = cascade.detectMultiScale(gray)
+    
+    # get rectangle from variable vertex
+    for (x, y, w, h) in vertex:
+        
+        # crop the vertex from image
+        crop_img = img[y:y + h, x:x + w]
+        # load to neural network function to get the label with % classification
+        label = neural_network_2828(crop_img)
+        
+        # put text
+        if (label[0] == "Vertex"):
+            
+            # draw rectangle
+            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 2)
+            
+            # choose font
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            # put the text: Vertex + % of confidence
+            cv2.putText(img, 'V'+label[2], (x - 2, y - 2),
+                        font, 0.5, (255, 0, 255), 1, cv2.LINE_AA)
+            
+        else:
+            
+            # draw rectangle
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            
+            # choose font
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            # put the text: Not Vertex + % of confidence
+            cv2.putText(img, 'NV'+label[2], (x - 2, y - 2),
+                        font, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+
+    # save image
+    x = image.split("/")    # image name save to variable to x
+    path = './PATH/TO/SAVE/YOUR/IMAGE/'
+    cv2.imwrite(path + x[-1], img)
+    return img
+```
 
 А здесь видно, как помогает дополнительный фильтр пересечений.
 
