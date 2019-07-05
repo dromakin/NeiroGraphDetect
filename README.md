@@ -200,7 +200,7 @@ epochs=EPOCHS, verbose=1)
 ![](./photo/haar_1.jpg)  | ![](./photo/haar_cnn_1.jpg)   |  ![](./photo/vertex_predict_1.jpg)
 ![](./photo/haar_2.jpg)  | ![](./photo/haar_cnn_2.jpg)   |  ![](./photo/vertex_predict_2.jpg)
 
-Если есть желание, то протестировать модель каскадов Хаара и фильта СНС можно с помощью следующего кода:
+Если есть желание, то можно протестировать модель каскадов Хаара и фильта СНС можно с помощью следующего кода:
 ```python
 def neural_network_2828(image, modelnn):
     # copy image
